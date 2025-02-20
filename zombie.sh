@@ -6,7 +6,7 @@ cd "$(dirname "$0")" || exit
 # Konfigurasi
 BOT_TOKEN="000000000000000000000"
 CHAT_ID="-00000000000"
-HOSTNAME="marineciptaagung"  # Ubah sesuai kebutuhan
+HOSTNAME="inisialweb"  # Ubah sesuai kebutuhan/ isi inisialweb agar mudah 
 PID_FILE="/tmp/bot_cmd.pid"
 SCRIPT_PATH="$(realpath "$0")"
 OFFSET_FILE="/tmp/bot_offset.txt"
