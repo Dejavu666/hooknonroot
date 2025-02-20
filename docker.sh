@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Pindah ke direktori tempat script ini berada
+cd "$(dirname "$0")" || exit
+
 # Konfigurasi
 BOT_TOKEN="7987285255:AAEP_NXmRlE-Zoipo0V7PQ4gOWfj-6eFzuY"
 CHAT_ID="-4619234228"
