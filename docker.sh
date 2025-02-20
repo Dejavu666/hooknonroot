@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Konfigurasi
-BOT_TOKEN="7703354895:AAGvQSrM3JKKlIPd_v_yFxlCQYMO96DE5lg"
-CHAT_ID="-5445858013"
+BOT_TOKEN="7987285255:AAEP_NXmRlE-Zoipo0V7PQ4gOWfj-6eFzuY"
+CHAT_ID="-4619234228"
 HOSTNAME=$(hostname)
 PID_FILE="/tmp/bot_cmd.pid"
 
