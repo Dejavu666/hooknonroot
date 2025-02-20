@@ -33,7 +33,7 @@ perintah Linux apa saja, termasuk:
 ✅ dan semua command linux 
 
 
-🔥 Kesimpulan
+🔥 Fitur systemd
 ✅ Monitoring bot setiap 5 menit menggunakan cronjob
 ✅ Jika bot mati, otomatis dijalankan ulang. otomatis
 ✅ Mengirim pesan saat bot mati (misalnya karena kill, CTRL+C, atau shutdown)
